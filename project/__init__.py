@@ -14,7 +14,32 @@ def create_tables():
     db.create_all()
 
 
-@app.route('/api/v1/admin/weapons', methods=['GET'])
+@app.route('/api/v1/admin/weapons', methods=['GET', 'POST'])
 def get_weapons():
 
+    return jsonify({'msg': 'success'}), 200
+
+
+@app.route('/api/v1/admin/weapons/<id>', methods=['GET', 'DELETE', 'PUT'])
+def select_weapons(id):
+    return jsonify({'msg': 'success'}), 200
+
+
+@app.route('/api/v1/items', methods=['GET', 'POST'])
+def get_items():
+    return jsonify({'msg': 'success'}), 200
+
+
+@app.route('/api/v1/items/<id>', methods=['GET', 'PUT', 'DELETE'])
+def select_items(id):
+    return jsonify({'msg': 'success'}), 200
+
+
+@app.route('/api/v1/area', methods=['GET', 'POST'])
+def get_areas():
+    return jsonify({'msg': 'success'}), 200
+
+
+@app.route('/api/v1/areas/<id>', methods=['GET', 'PUT', 'DELETE'])
+def select_areas(id):
     return jsonify({'msg': 'success'}), 200
