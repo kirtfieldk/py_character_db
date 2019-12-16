@@ -14,13 +14,13 @@ class Areas(db.Model):
     def __init__(self, name, desc):
         self.name = name
         self.desc = desc
-    def __repr__(self):
-        return jsonify({
+    def to_json(self):
+        return {
             'name': self.name,
             'desc': self.desc,
             'character': list(map(lambda x: x, self.character)),
             'weapons': list(map(lambda x: x, self.weapon))
-        })
+        }
 
     def save_to_db(self):
         db.session.add(self)
@@ -36,7 +36,19 @@ class Areas(db.Model):
             return jsonify({
                 'success': True,
                 'count': 1,
-                'data': area
+                'data': area.to_json()
             }), 200
         except AttributeError:
             return Errors('Unable To Find area', 404).to_json()
+
+    @classmethod
+    def all_areas(cls):
+        try:
+            area = cls.query.all()
+            return jsonify({
+                'success': True,
+                'count': 1,
+                'data': list(map(lambda x: x.to_json(), area))
+            }), 200
+        except AttributeError:
+            return Errors('Unable To Find area', 404).to_json()   

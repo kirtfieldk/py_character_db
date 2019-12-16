@@ -35,7 +35,7 @@ class Character(db.Model):
             return jsonify({
                 'success': True,
                 'count': 1,
-                'data': area
+                'data': area.to_json()
             }), 200
         except AttributeError:
             return Errors('Unable To Find area', 404).to_json()

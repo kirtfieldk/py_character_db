@@ -6,23 +6,23 @@ class Weapons(db.Model):
     __tablename__ = 'weapons'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    area = db.relationship('Area', backref='area', lazy=True)
+    # area = db.relationship('Areas', backref='area', lazy=True)
     desc = db.Column(db.String(250), nullable=False)
     power = db.Column(db.Integer, nullable=False)
-    character = db.relationship('Character', backref='character', lazy=True)
+    # character = db.relationship('Character', backref='character', lazy=True)
 
     def __init__(self, name, desc, power):
         self.name = name
         self.desc = desc
         self.power = power
-    def __repr__(self):
-        return jsonify({
+    def to_json(self):
+        return {
             'name': self.name,
             'desc': self.desc,
-            'area': self.area[0].name,
-            'character': self.chracter[0].name,
+            # 'area': self.area[0].name,
+            # 'character': self.chracter[0].name,
             'power': self.power
-        })
+        }
 
     def save_to_db(self):
         db.session.add(self)
@@ -38,7 +38,20 @@ class Weapons(db.Model):
             return jsonify({
                 'success': True,
                 'count': 1,
-                'data': weapon
+                'data': weapon.to_json()
             }), 200
         except AttributeError:
             return Errors('Unable To Find weapon', 404).to_json()
+    @classmethod
+    def all_weapons(cls):
+        try:
+            weapon = cls.query.all()
+            # for x in weapon:
+            #     print("Hello ", x.to_json())
+            return jsonify({
+                'success': True,
+                'count': 1,
+                'data': list(map(lambda x: x.to_json(), weapon))
+            }), 200
+        except AttributeError:
+            return Errors('Unable To Find weapon', 404).to_json()    

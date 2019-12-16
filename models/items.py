@@ -14,12 +14,12 @@ class Items(db.Model):
         self.name = name
         self.desc = desc
     def __repr__(self):
-        return jsonify({
+        return 
             'name': self.name,
             'desc': self.desc,
             'area': self.area[0].name,
             'character': self.chracter[0].name
-        })
+        }
 
     def save_to_db(self):
         db.session.add(self)
@@ -35,7 +35,19 @@ class Items(db.Model):
             return jsonify({
                 'success': True,
                 'count': 1,
-                'data': item
+                'data': item.to_json()
             }), 200
         except AttributeError:
             return Errors('Unable To Find item', 404).to_json()
+
+    @classmethod
+    def all_item(cls):
+        try:
+            items = cls.query.all()
+            return jsonify({
+                'success': True,
+                'count': 1,
+                'data': list(map(lambda x: x.to_json(), items))
+            }), 200
+        except AttributeError:
+            return Errors('Unable To Find items', 404).to_json()   
