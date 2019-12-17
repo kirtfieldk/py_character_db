@@ -2,6 +2,7 @@ from flask import jsonify
 from middleware import db
 from models.errors import Errors
 
+
 class Items(db.Model):
     __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True)
@@ -13,8 +14,9 @@ class Items(db.Model):
     def __init__(self, name, desc):
         self.name = name
         self.desc = desc
+
     def __repr__(self):
-        return 
+        return{
             'name': self.name,
             'desc': self.desc,
             'area': self.area[0].name,
@@ -28,6 +30,7 @@ class Items(db.Model):
     def delete_db(self):
         db.session.delete(self)
         db.session.commit()
+
     @classmethod
     def find_by_id(cls, id):
         try:
@@ -46,8 +49,8 @@ class Items(db.Model):
             items = cls.query.all()
             return jsonify({
                 'success': True,
-                'count': 1,
+                'count': len(items),
                 'data': list(map(lambda x: x.to_json(), items))
             }), 200
         except AttributeError:
-            return Errors('Unable To Find items', 404).to_json()   
+            return Errors('Unable To Find items', 404).to_json()

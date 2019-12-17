@@ -2,6 +2,7 @@ from flask import jsonify
 from middleware import db
 from models.errors import Errors
 
+
 class Weapons(db.Model):
     __tablename__ = 'weapons'
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +16,7 @@ class Weapons(db.Model):
         self.name = name
         self.desc = desc
         self.power = power
+
     def to_json(self):
         return {
             'name': self.name,
@@ -31,6 +33,7 @@ class Weapons(db.Model):
     def delete_db(self):
         db.session.delete(self)
         db.session.commit()
+
     @classmethod
     def find_by_id(cls, id):
         try:
@@ -42,16 +45,15 @@ class Weapons(db.Model):
             }), 200
         except AttributeError:
             return Errors('Unable To Find weapon', 404).to_json()
+
     @classmethod
     def all_weapons(cls):
         try:
             weapon = cls.query.all()
-            # for x in weapon:
-            #     print("Hello ", x.to_json())
             return jsonify({
                 'success': True,
-                'count': 1,
+                'count': len(weapon),
                 'data': list(map(lambda x: x.to_json(), weapon))
             }), 200
         except AttributeError:
-            return Errors('Unable To Find weapon', 404).to_json()    
+            return Errors('Unable To Find weapon', 404).to_json()

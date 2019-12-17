@@ -9,14 +9,21 @@ def create_weapon(res):
     return w1.to_json(), 200
 
 
-def get_weapons():
-    return Weapons.all_weapons()
-    # return jsonify({"msg": "Calles"}), 200
-
-
 def delete_weapon(id):
     res = db.session.query(Weapons).filter_by(id=id).one()
     res.delete_db()
     return jsonify({
         'msg': 'success'
     }), 201
+
+# Upgraded weapons +100 dmg
+
+
+def upgrade_weapon(id):
+    res = db.session.query(Weapons).filter_by(id=id).one()
+    print(res.power)
+    res.power += 100
+    res.save_to_db()
+    return jsonify({
+        'data': res.to_json()
+    })
