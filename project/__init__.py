@@ -2,9 +2,9 @@ from flask import request, Flask, jsonify
 from middleware import db
 from models.weapons import Weapons
 from models.area import Areas
-from routes.weapons import create_weapon, delete_weapon, upgrade_weapon
-from routes.area import add_area, get_areas, delete_area
-
+from models.items import Items
+from routes.generic import add, delete, get
+from routes.weapons import upgrade_weapon
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///story.db'
@@ -17,49 +17,67 @@ db.init_app(app)
 def create_tables():
     db.create_all()
 
-
-# WEAPONS #
-###########
+#ADMIN METHODS#
+#################
 @app.route('/api/v1/admin/weapon', methods=['POST'])
 def weapon():
     if request.method == 'POST':
-        return create_weapon(request.get_json())
+        return add(Weapons, request.get_json())
     return jsonify({"ll": "ll}"})
 
 
-@app.route('/api/v1/weapon/<id>', methods=['DELETE', 'PUT'])
+@app.route('/api/v1/admin/area/<id>', methods=['DELETE', 'GET'])
+def admin_add_area(id):
+    if request.method == 'DELETE':
+        return delete(Areas, id)
+    if request.method == 'GET':
+        return Areas.find_by_id(id)
+    return jsonify({'msg': 'm'}), 200
+
+
+@app.route('/api/v1/admin/weapons/<id>', methods=['GET', 'DELETE', 'PUT'])
 def select_weapon(id):
     if request.method == 'DELETE':
-        return delete_weapon(id)
+        return delete(Weapons, id)
     if request.method == 'PUT':
         return upgrade_weapon(id)
+    if request.method == 'GET':
+        return Weapons.find_by_id(id)
     return jsonify({"ll": "ll}"})
 
 
+@app.route('/api/v1/admin/area', methods=['POST'])
+def areas():
+    if request.method == 'POST':
+        return add(Areas, request.get_json())
+    return jsonify({'msg': 'm'}), 200
+
+
+@app.route('/api/v1/admin/items', methods=['GET', 'POST'])
+def admin_items():
+    if request.method == 'POST':
+        return add(Items, request.get_json())
+    if request.method == 'GET':
+        return Items.all_item()
+    return jsonify({"msg": "ed"})
+
+
+@app.route('/api/v1/admin/items/<id>', methods=['GET', 'DELETE', 'PUT'])
+def admin_item(id):
+    if request.method == 'DELETE':
+        return delete(Items, id)
+    # if request.method == 'PUT':
+    #     return upgrade_weapon(id)
+    if request.method == 'GET':
+        return Items.find_by_id(id)
+    return jsonify({"ll": "ll}"})
+
+#END OF ADMIN METHODS#
 @app.route('/api/v1/weapons', methods=['GET'])
 def get_weapons():
     if request.method == 'GET':
         return Weapons.all_weapons()
     return jsonify({'msg': 'lllll'}), 200
-
-
-@app.route('/api/v1/admin/weapons/<id>', methods=['GET', 'DELETE', 'PUT'])
-def select_weapons(id):
-    return jsonify({'msg': 'm'}), 200
-
-####Admin Add Area####
-@app.route('/api/v1/admin/area', methods=['POST'])
-def areas():
-    if request.method == 'POST':
-        return add_area(request.get_json())
-    return jsonify({'msg': 'm'}), 200
-
-
-@app.route('/api/v1/admin/area/<id>', methods=['DELETE'])
-def admin_add_area(id):
-    if request.method == 'DELETE':
-        return delete_area(id)
-    return jsonify({'msg': 'm'}), 200
 
 
 @app.route('/api/v1/area', methods=['GET'])
