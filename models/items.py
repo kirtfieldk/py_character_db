@@ -7,20 +7,14 @@ class Items(db.Model):
     __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    # area = db.relationship('Area', backref='area', lazy=True)
+    # area = db.Column(db.Integer, db.ForeignKey('areas.id'))
     desc = db.Column(db.String(250), nullable=False)
-    # character = db.relationship('Character', backref='character', lazy=True)
-
-    def __init__(self, name, desc):
-        self.name = name
-        self.desc = desc
+    character = db.Column(db.Integer, db.ForeignKey('character.id'))
 
     def to_json(self):
         return{
             'name': self.name,
             'desc': self.desc,
-            # 'area': self.area[0].name,
-            # 'character': self.chracter[0].name
         }
 
     def save_to_db(self):

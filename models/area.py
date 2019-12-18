@@ -9,8 +9,8 @@ class Areas(db.Model):
     name = db.Column(db.String(250), nullable=False)
     desc = db.Column(db.String(250), nullable=False)
     # character = db.relationship('Characters', backref='character', lazy=True)
-    # item = db.relationship('Items', backref='items', lazy = True)
-    # weapon = db.relationship('Weapons', backref='weapon', lazy=True)
+    # item = db.relationship('Items', backref='items', lazy=True)
+    # weapon = db.relationship('Weapons', backref='weapons', lazy=True)
 
     def __init__(self, name, desc):
         self.name = name
@@ -20,8 +20,8 @@ class Areas(db.Model):
         return {
             'name': self.name,
             'desc': self.desc,
-            # 'character': list(map(lambda x: x, self.character)),
-            # 'weapons': list(map(lambda x: x, self.weapon))
+            'character': list(map(lambda x: x, self.character)),
+            'weapons': list(map(lambda x: x, self.weapon))
         }
 
     def save_to_db(self):

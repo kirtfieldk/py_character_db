@@ -7,9 +7,9 @@ class Character(db.Model):
     __tablename__ = 'character'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    # area = db.relationship('Area', backref='areas', nullable=False)
-    # item = db.relationship('Items', backref='items', lazy = True)
-    # weapon = db.relationship('Weapons', backref='weapon', lazy=True)
+    # area = db.relationship('Area', backref='areas', lazy=True)
+    item = db.relationship('Items', backref='objs', lazy=True)
+    weapon = db.relationship('Weapons', backref='owner', lazy=True)
 
     def __init__(self, name):
         self.name = name
@@ -17,10 +17,11 @@ class Character(db.Model):
     def to_json(self):
         return {
             'name': self.name,
-            'desc': self.desc,
+            # 'desc': self.desc,
             # 'area': self.area[0].name,
             # 'character': list(map(lambda x: x, self.character)),
-            # 'weapons': list(map(lambda x: x, self.weapon))
+            'weapons': list(map(lambda x: x.to_json(), self.weapon)),
+            'items': list(map(lambda x: x.to_json(), self.item)),
         }
 
     def save_to_db(self):
@@ -39,6 +40,18 @@ class Character(db.Model):
                 'success': True,
                 'count': len(area),
                 'data': area.to_json()
+            }), 200
+        except AttributeError:
+            return Errors('Unable To Find area', 404).to_json()
+
+    @classmethod
+    def all_areas(cls):
+        try:
+            area = cls.query.all()
+            return jsonify({
+                'success': True,
+                'count': len(area),
+                'data': list(map(lambda x: x.to_json(), area))
             }), 200
         except AttributeError:
             return Errors('Unable To Find area', 404).to_json()

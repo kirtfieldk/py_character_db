@@ -16,6 +16,9 @@ def add(table, res):
             o1 = table(res['name'], res['desc'])
         if table is Character:
             o1 = table(res['name'])
+            # o2 = Weapons(name=res['weapon_name'], desc=res['desc'],
+            #              power=res['power'], owner=o1)
+            # o2.save_to_db()
         if table is Weapons:
             o1 = table(res['name'], res['desc'], res['power'])
         o1.save_to_db()

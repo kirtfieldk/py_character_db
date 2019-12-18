@@ -2,9 +2,11 @@ from flask import request, Flask, jsonify
 from middleware import db
 from models.weapons import Weapons
 from models.area import Areas
+from models.character import Character
 from models.items import Items
 from routes.generic import add, delete, get
 from routes.weapons import upgrade_weapon
+from routes.character import add_weapon, add_item
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///story.db'
@@ -100,3 +102,21 @@ def select_items(id):
 @app.route('/api/v1/areas/<id>', methods=['GET', 'PUT', 'DELETE'])
 def select_areas(id):
     return jsonify({'msg': 'ss'}), 200
+
+
+@app.route('/api/v1/character', methods=['POST', 'GET'])
+def character():
+    if request.method == 'POST':
+        return add(Character, request.get_json())
+    if request.method == 'GET':
+        return Character.all_areas()
+
+
+@app.route('/api/v1/<id>/addweapon', methods=['POST'])
+def add_character_weapon(id):
+    return add_weapon(id, request.get_json())
+
+
+@app.route('/api/v1/<id>/additem', methods=['POST'])
+def add_character_item(id):
+    return add_item(id, request.get_json())

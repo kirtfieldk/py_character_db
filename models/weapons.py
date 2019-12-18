@@ -7,15 +7,15 @@ class Weapons(db.Model):
     __tablename__ = 'weapons'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    # area = db.relationship('Areas', backref='area', lazy=True)
+    # area = db.Column(db.Integer, db.ForeignKey('areas.id'))
     desc = db.Column(db.String(250), nullable=False)
     power = db.Column(db.Integer, nullable=False)
-    # character = db.relationship('Character', backref='character', lazy=True)
+    character_id = db.Column(db.Integer, db.ForeignKey('character.id'))
 
-    def __init__(self, name, desc, power):
-        self.name = name
-        self.desc = desc
-        self.power = power
+    # def __init__(self, name, desc, power):
+    #     self.name = name
+    #     self.desc = desc
+    #     self.power = power
 
     def to_json(self):
         return {
