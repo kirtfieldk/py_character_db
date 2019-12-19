@@ -3,7 +3,6 @@ from flask import jsonify
 from sqlalchemy.orm.exc import NoResultFound
 from middleware import db
 from models.errors import Errors
-from models.area import Areas
 from models.character import Character
 from models.items import Items
 from models.weapons import Weapons
@@ -11,14 +10,11 @@ from models.weapons import Weapons
 
 def add(table, res):
     try:
-        if table is Areas or table is Items:
+        if table is Items:
             print("Calles")
             o1 = table(res['name'], res['desc'])
         if table is Character:
             o1 = table(res['name'])
-            # o2 = Weapons(name=res['weapon_name'], desc=res['desc'],
-            #              power=res['power'], owner=o1)
-            # o2.save_to_db()
         if table is Weapons:
             o1 = table(res['name'], res['desc'], res['power'])
         o1.save_to_db()

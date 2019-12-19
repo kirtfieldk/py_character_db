@@ -7,7 +7,6 @@ class Items(db.Model):
     __tablename__ = 'items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    # area = db.Column(db.Integer, db.ForeignKey('areas.id'))
     desc = db.Column(db.String(250), nullable=False)
     character = db.Column(db.Integer, db.ForeignKey('character.id'))
 

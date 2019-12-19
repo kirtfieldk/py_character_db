@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Wild Farie",
+    "desc": "Replinish hp",
+    "character": 3
+  },
+  {
+    "name": "mush shoup",
+    "desc": "Toxic - affilcts enimies with poisen",
+    "character": 2
+  },
+  {
+    "name": "Blushi",
+    "desc": "Blue Snow",
+    "character": 1
+  }
+]

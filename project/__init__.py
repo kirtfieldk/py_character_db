@@ -1,18 +1,19 @@
 from flask import request, Flask, jsonify
-from middleware import db
+from middleware import db, login_manager, bycrpt
 from models.weapons import Weapons
-from models.area import Areas
 from models.character import Character
 from models.items import Items
 from routes.generic import add, delete, get
 from routes.weapons import upgrade_weapon
-from routes.character import add_weapon, add_item
+from routes.character import add_weapon, add_item, create_character, login, logout
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///story.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 db.init_app(app)
+bycrpt.init_app(app)
+login_manager.init_app(app)
 
 
 @app.before_first_request
@@ -28,15 +29,6 @@ def weapon():
     return jsonify({"ll": "ll}"})
 
 
-@app.route('/api/v1/admin/area/<id>', methods=['DELETE', 'GET'])
-def admin_add_area(id):
-    if request.method == 'DELETE':
-        return delete(Areas, id)
-    if request.method == 'GET':
-        return Areas.find_by_id(id)
-    return jsonify({'msg': 'm'}), 200
-
-
 @app.route('/api/v1/admin/weapons/<id>', methods=['GET', 'DELETE', 'PUT'])
 def select_weapon(id):
     if request.method == 'DELETE':
@@ -46,13 +38,6 @@ def select_weapon(id):
     if request.method == 'GET':
         return Weapons.find_by_id(id)
     return jsonify({"ll": "ll}"})
-
-
-@app.route('/api/v1/admin/area', methods=['POST'])
-def areas():
-    if request.method == 'POST':
-        return add(Areas, request.get_json())
-    return jsonify({'msg': 'm'}), 200
 
 
 @app.route('/api/v1/admin/items', methods=['GET', 'POST'])
@@ -82,13 +67,6 @@ def get_weapons():
     return jsonify({'msg': 'lllll'}), 200
 
 
-@app.route('/api/v1/area', methods=['GET'])
-def get_areas():
-    if request.method == 'GET':
-        return Areas.all_areas()
-    return jsonify({'msg': 'm'}), 200
-
-
 @app.route('/api/v1/items', methods=['GET', 'POST'])
 def get_items():
     return jsonify({'msg': 'a'}), 200
@@ -99,17 +77,17 @@ def select_items(id):
     return jsonify({'msg': 'd'}), 200
 
 
-@app.route('/api/v1/areas/<id>', methods=['GET', 'PUT', 'DELETE'])
-def select_areas(id):
-    return jsonify({'msg': 'ss'}), 200
-
-
 @app.route('/api/v1/character', methods=['POST', 'GET'])
 def character():
     if request.method == 'POST':
-        return add(Character, request.get_json())
-    if request.method == 'GET':
-        return Character.all_areas()
+        return create_character(request.get_json())
+
+
+@app.route('/api/v1/login/character', methods=['POST'])
+def login_character():
+    if request.method == 'POST':
+        res = request.get_json()
+        return login(res['name'], res['password'])
 
 
 @app.route('/api/v1/<id>/addweapon', methods=['POST'])

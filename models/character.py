@@ -7,19 +7,18 @@ class Character(db.Model):
     __tablename__ = 'character'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250), nullable=False)
-    # area = db.relationship('Area', backref='areas', lazy=True)
+    password = db.Column(db.String(250), nullable=False)
     item = db.relationship('Items', backref='objs', lazy=True)
     weapon = db.relationship('Weapons', backref='owner', lazy=True)
 
-    def __init__(self, name):
+    def __init__(self, name, password):
         self.name = name
+        self.password = password
 
     def to_json(self):
         return {
             'name': self.name,
-            # 'desc': self.desc,
-            # 'area': self.area[0].name,
-            # 'character': list(map(lambda x: x, self.character)),
+            'password': self.password,
             'weapons': list(map(lambda x: x.to_json(), self.weapon)),
             'items': list(map(lambda x: x.to_json(), self.item)),
         }

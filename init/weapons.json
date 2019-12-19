@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Ome Weaker",
+    "desc": "Holy Battle Axe",
+    "power": 3400,
+    "character": 3
+  },
+  {
+    "name": "Moggle Bow",
+    "desc": "Titan Bow",
+    "power": 4200,
+    "character": 2
+  },
+  {
+    "name": "Saber Flair",
+    "desc": "Lightweight and powerful Bow",
+    "power": 2900,
+    "character": 1
+  }
+]
