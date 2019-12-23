@@ -1,4 +1,5 @@
 from flask import request, Flask, jsonify
+from flask_cors import CORS
 from middleware import db, login_manager, bycrpt
 from models.weapons import Weapons
 from models.character import Character
@@ -14,7 +15,7 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 db.init_app(app)
 bycrpt.init_app(app)
 login_manager.init_app(app)
-
+CORS(app)
 
 @app.before_first_request
 def create_tables():
@@ -60,23 +61,24 @@ def admin_item(id):
     return jsonify({"ll": "ll}"})
 
 #END OF ADMIN METHODS#
+# Get all weapons
 @app.route('/api/v1/weapons', methods=['GET'])
 def get_weapons():
     if request.method == 'GET':
         return Weapons.all_weapons()
     return jsonify({'msg': 'lllll'}), 200
 
-
+# Get all items
 @app.route('/api/v1/items', methods=['GET', 'POST'])
 def get_items():
     return jsonify({'msg': 'a'}), 200
 
-
+# Get spefic items and update
 @app.route('/api/v1/items/<id>', methods=['GET', 'PUT', 'DELETE'])
 def select_items(id):
     return jsonify({'msg': 'd'}), 200
 
-
+# Cretae and get charcaters
 @app.route('/api/v1/character', methods=['POST', 'GET'])
 def character():
     if request.method == 'POST':
